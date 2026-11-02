@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section class="hero">
+  <h1 id="verdict" class="verdict" data-state="pending" aria-live="polite">Checking your sites.</h1>
+  <p class="subline">
+    <span class="live" aria-hidden="true"></span>
+    <span id="subline-text">Loading status.</span>
+  </p>
+</section>
+
+<section class="sites" aria-labelledby="sites-title">
+  <div class="sites-head">
+    <h2 id="sites-title">Sites</h2>
+    <form class="add" method="post" action="{{ url_for('add_site') }}">
+      <label class="sr" for="url">Web address</label>
+      <input id="url" name="url" type="text" placeholder="example.com" required autocomplete="off" inputmode="url">
+      <button type="submit">Add site</button>
+    </form>
+  </div>
+
+  <div id="site-list" class="list">
+    <noscript><p class="empty">Turn on JavaScript to see live status.</p></noscript>
+  </div>
+
+  <p class="legend">Each bar is one check, with the newest on the right. Taller bars were slower. Red bars failed.</p>
+</section>
+
+<script id="initial-data" type="application/json">{{ initial|tojson }}</script>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='app.js') }}"></script>
+{% endblock %}

@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}Uptime Checker{% endblock %}</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=Bricolage+Grotesque:opsz,wght@12..96,600..800&display=swap">
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <header class="top">
+    <div class="wrap">
+      <a class="brand" href="{{ url_for('index') }}">
+        <svg class="brand-mark" viewBox="0 0 22 16" width="22" height="16" aria-hidden="true">
+          <rect x="1" y="6" width="4" height="10" rx="1.5"/>
+          <rect x="9" y="1" width="4" height="15" rx="1.5"/>
+          <rect x="17" y="8" width="4" height="8" rx="1.5"/>
+        </svg>
+        Uptime Checker
+      </a>
+    </div>
+  </header>
+
+  <main class="wrap">
+    {% block content %}{% endblock %}
+  </main>
+
+  <footer class="wrap foot">
+    Sites are checked every {{ interval }} seconds. Results are saved in uptime.db.
+  </footer>
+
+  {% block scripts %}{% endblock %}
+</body>
+</html>

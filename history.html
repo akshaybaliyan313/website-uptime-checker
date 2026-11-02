@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+
+{% block title %}{{ site.host }} - Uptime Checker{% endblock %}
+
+{% block content %}
+<a class="back" href="{{ url_for('index') }}">All sites</a>
+
+<section class="hero hero-tight">
+  <h1 class="verdict" data-state="{{ site.state }}">
+    {% if site.state == 'pending' %}{{ site.host }} has not been checked yet.
+    {% else %}{{ site.host }} is {{ 'up' if site.state == 'up' else 'down' }}.{% endif %}
+  </h1>
+  {% if stats.total %}
+  <p class="summary">
+    {{ '%.1f' % stats.uptime }}% uptime across {{ stats.total }} checks.
+    {% if stats.avg_ms is not none %}Responses averaged {{ stats.avg_ms|round|int }} ms and the slowest took {{ stats.max_ms }} ms.{% endif %}
+    {% if stats.last_down %}It was last down at {{ stats.last_down }}.{% else %}No downtime has been recorded.{% endif %}
+  </p>
+  {% else %}
+  <p class="summary">The first check runs within a minute. Reload this page after that.</p>
+  {% endif %}
+</section>
+
+<section class="block">
+  <h2>Response time</h2>
+  <div id="chart" class="chart"></div>
+  <script id="chart-data" type="application/json">{{ points|tojson }}</script>
+</section>
+
+<section class="block">
+  <h2>Recent checks</h2>
+  {% if checks %}
+  <div class="table-wrap">
+    <table class="checks">
+      <thead>
+        <tr><th scope="col">Time</th><th scope="col">Result</th><th scope="col">HTTP code</th><th scope="col">Response</th></tr>
+      </thead>
+      <tbody>
+        {% for c in checks %}
+        <tr>
+          <td>{{ c.checked_at }}</td>
+          <td class="res {{ 'is-up' if c.is_up else 'is-down' }}">{{ 'Up' if c.is_up else 'Down' }}</td>
+          <td>{{ c.status_code if c.status_code else 'No response' }}</td>
+          <td>{{ c.response_ms ~ ' ms' if c.response_ms is not none else '-' }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  <p class="legend">Showing the last 100 checks.</p>
+  {% else %}
+  <p class="empty">No checks yet.</p>
+  {% endif %}
+</section>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='history.js') }}"></script>
+{% endblock %}
